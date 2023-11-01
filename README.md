@@ -1,59 +1,64 @@
-# Statefulsets
-Before starting the task:
-
-*   Run the following command:
-    
-        $ ./deploy_sts
-    
+# Daemonsets
 
 **To check tasks and get secret phrases run:**
 
-    $ ./checker -course 'kubernetes' -course-version 'statefulsets' -test-suite 'statefulset'
+    $ ./checker -course 'kubernetes' -course-version 'daemonsets' -test-suite 'daemonset'
 
-**NOTE:** before running check after each task make sure that statefulset is up and all replicas are also running.
+**NOTE:** before running check after each task make sure that daemonset or nodes are up and running.
 
 **Task 1:**
 
-Create a new StatefulSet:
+Create a new node and set up `worker` role for it.
 
-    Requirements:
-     Name: random-generator
-     Image: sbeliakou/random-generator:1
-     Namespace: default
-     Replicas: 3
-     Service: random-generator
-     Labels: app=random-generator
-
-**Do not forget to copy secret phrase, test will fail after task 3.**
+**Do not forget to copy secret phrase, test will fail after task 5.**
 
 **Task 2:**
 
-Add volumeClaimTemplates to `random-generator` sts. Recreate statefulset if it’s needed.
+Taint your nodes.
 
-    Name: logs
-    mountPath: /logs
-    Capacity: 10Mi
-    accessMode: ReadWriteOnce
+    Requirements:
+    control-plane:
+    key: node-role.kubernetes.io/control-plane
+    effect: NoSchedule
+    worker:
+    key: node-role.kubernetes.io/worker
+    effect: NoSchedule
+
+**Do not forget to copy secret phrase, test will fail after task 6.**
 
 **Task 3:**
 
-Update container’s image to version 2.
+Deploy daemonset
 
-_Please pay attention to the way how StatefulSet recreates pods. It starts from 2 and goes to 0._
+    Requirements:
+    Name: fluentd-elasticsearch
+    Image: quay.io/fluentd_elasticsearch/fluentd:v2.5.2
+
+_Please pay attention how many pods were created and why._
+
+**Do not forget to copy secret phrase, test will fail after next task.**
 
 **Task 4:**
 
-Run any test pod. Using nslookup check the record of random-generator service. Save the output of the above commands to `$HOME/k8s_sts.txt`
+Modify `fluentd-elasticsearch` DaemonSet to ensure that pods run on every node.**You should change only DaemonSet configuration!**
 
-    nslookup random-generator-0.random-generator.default.svc.cluster.local
-    nslookup random-generator-1.random-generator.default.svc.cluster.local
-    nslookup random-generator-3.random-generator.default.svc.cluster.local
+**Do not forget to copy secret phrase, test will fail after next task.**
 
-  
-  
+**Task 5:**
 
-This is it with statefulsets. To remove auomatically privisioned resources run:
+Create one more node and set up `worker` role for it.
 
-    $ ./delete_sts
+_Please pay attention on number of pods._
 
-And don't forget to clean up everything else
+**Do not forget to copy secret phrase, test will fail after task 6.**
+
+**Task 6:**
+
+**jq utility should be installed before running checker!**
+
+*   Get details of nodes in JSON format and save it to `$HOME/nodes-info.json` file.
+*   Delete all `worker` nodes.
+*   Untaint `control-plane` node.
+*   Remove `fluentd-elasticsearch` DaemonSet.
+
+This is it with DaemonSets.
