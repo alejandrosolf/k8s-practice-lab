@@ -61,8 +61,8 @@ Requirements:
 
 Create a Pod (namespace: default, name: envtest, image: busybox:1.34, container process: env && sleep infinity). Specify following ENV variables for the main container:
 
-*   STUDENT\_FIRST\_NAME: \<yourname\>
-*   STUDENT\_LAST\_NAME: \<yourlastname\>
+*   STUDENT\_FIRST\_NAME: `<yourname>`
+*   STUDENT\_LAST\_NAME: `<yourlastname>`
 *   Check Pod logs with kubectl logs command. Should be similar to this:
     
         ... 
