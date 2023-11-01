@@ -1,64 +1,68 @@
-# Daemonsets
+# Services
+
+Before starting the task:
+
+*   Run the following command:
+    
+        $ ./deploy_svc
+    
 
 **To check tasks and get secret phrases run:**
 
-    $ ./checker -course 'kubernetes' -course-version 'daemonsets' -test-suite 'daemonset'
-
-**NOTE:** before running check after each task make sure that daemonset or nodes are up and running.
+    $ ./checker -course 'kubernetes' -course-version 'services' -test-suite 'service'
 
 **Task 1:**
 
-Create a new node and set up `worker` role for it.
+Create `pod-info-svc` service for `pod-info-app` deployment:
 
-**Do not forget to copy secret phrase, test will fail after task 5.**
+    Requirements:
+     Name: pod-info-svc
+     Type: ClusterIP
+     Service Port: 80
+     Service TargetPort: 80
+
+Investigate `pod-info-app` deployment and choose selector and do not change the deployment
 
 **Task 2:**
 
-Taint your nodes.
+Run a pod (based on image busybox:1.28) and execute following commands (as given below) inside this pod and save outputs into files:
 
-    Requirements:
-    control-plane:
-    key: node-role.kubernetes.io/control-plane
-    effect: NoSchedule
-    worker:
-    key: node-role.kubernetes.io/worker
-    effect: NoSchedule
-
-**Do not forget to copy secret phrase, test will fail after task 6.**
+    wget -q -O- pod-info-svc save to $HOME/testing-clusterip-web.log
+    nslookup pod-info-svc save to $HOME/testing-clusterip-nslookup.log
 
 **Task 3:**
 
-Deploy daemonset
+*   Create deployment `myapp`, image: sbeliakou/web-pod-info:v1, replicas: 1
+*   Create headless service `myapp-headless` pointing to myapp pods
+*   Create non-headless service `myapp-clusterip` pointing to myapp pods
 
-    Requirements:
-    Name: fluentd-elasticsearch
-    Image: quay.io/fluentd_elasticsearch/fluentd:v2.5.2
+Checking name resolution:
 
-_Please pay attention how many pods were created and why._
+Non-headless service has own IP address (and port), and proxies traffic to backends:
 
-**Do not forget to copy secret phrase, test will fail after next task.**
+    $ kubectl run --rm -it test --image=busybox:1.27 --restart=Never nslookup myapp-clusterip
+
+Headless service doesn’t proxy traffic to backends, it simply responds (on early dns lookup phase) with the IP address(es) where to go:
+
+    $ kubectl run --rm -it test --image=busybox:1.27 --restart=Never nslookup myapp-headless
 
 **Task 4:**
 
-Modify `fluentd-elasticsearch` DaemonSet to ensure that pods run on every node.**You should change only DaemonSet configuration!**
+We have already created hello-hello web application for you. Create a new service to access this web application, check the requirements.Figure out all necessary settings from the deployment.
 
-**Do not forget to copy secret phrase, test will fail after next task.**
+    Requirements:
+     Name: hello-hello-service
+     Type: NodePort
+     Downstream Pod Port (Service targetPort): 80
+     Node Port: 30300
 
-**Task 5:**
+For verification you can execute `` `curl $NODE_IP:30300` `` command or open the browser page http://$NODE\_IP:30300. Substitute $NODE\_IP with the IP address of your node.
 
-Create one more node and set up `worker` role for it.
+  
+  
 
-_Please pay attention on number of pods._
+This is it with services. To remove auomatically privisioned resources run:
 
-**Do not forget to copy secret phrase, test will fail after task 6.**
+    $ ./delete_svc
 
-**Task 6:**
-
-**jq utility should be installed before running checker!**
-
-*   Get details of nodes in JSON format and save it to `$HOME/nodes-info.json` file.
-*   Delete all `worker` nodes.
-*   Untaint `control-plane` node.
-*   Remove `fluentd-elasticsearch` DaemonSet.
-
-This is it with DaemonSets.
+And don't forget to clean up everything else
