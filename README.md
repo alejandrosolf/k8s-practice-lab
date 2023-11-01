@@ -1,82 +1,59 @@
+# Statefulsets
 Before starting the task:
 
 *   Run the following command:
     
-        $ ./deploy_deployments
+        $ ./deploy_sts
     
 
 **To check tasks and get secret phrases run:**
 
-    $ ./checker -course 'kubernetes' -course-version 'deployments' -test-suite 'deployment'
+    $ ./checker -course 'kubernetes' -course-version 'statefulsets' -test-suite 'statefulset'
 
-**NOTE:** before running check after each task make sure that deployment is up and all replicas are also running.
+**NOTE:** before running check after each task make sure that statefulset is up and all replicas are also running.
 
 **Task 1:**
 
-Create a new deployment called nginx-deploy:
+Create a new StatefulSet:
 
     Requirements:
-     Name: nginx-deploy
-     Image: nginx:1.19-alpine
+     Name: random-generator
+     Image: sbeliakou/random-generator:1
      Namespace: default
-     Replicas: 1
-     Labels: app=nginx-deploy
+     Replicas: 3
+     Service: random-generator
+     Labels: app=random-generator
 
 **Do not forget to copy secret phrase, test will fail after task 3.**
 
 **Task 2:**
 
-Inspect the details listed above, add necessary options to `kubectl create deploy` command to produce following deployment configuration:
+Add volumeClaimTemplates to `random-generator` sts. Recreate statefulset if it’s needed.
 
-    Name: easy-peasy
-    Image: busybox:1.34
-    Replicas: 5
-    Command: sleep infinity
+    Name: logs
+    mountPath: /logs
+    Capacity: 10Mi
+    accessMode: ReadWriteOnce
 
 **Task 3:**
 
-Scale `nginx-deploy` deployment to 6 replicas.
+Update container’s image to version 2.
+
+_Please pay attention to the way how StatefulSet recreates pods. It starts from 2 and goes to 0._
 
 **Task 4:**
 
-Inspect the details listed above and create deployment:
+Run any test pod. Using nslookup check the record of random-generator service. Save the output of the above commands to `$HOME/k8s_sts.txt`
 
-    Deployment Name: <youname>-app
-    Replicas: 1
-    Deployment Labels:
-      task: deploy
-      app: <youname>-app
-      student: <youname>
-    Pod(s) Labels:
-       deploy: <youname>-app
-       kind: redis
-       role: master
-       tier: db
-    Container:
-       Image: redis:5-alpine
-       Port: 6379
-       Name: redis-master
-    Init Container:
-       Image: busybox:1.34
-       Command: sleep 10
-
-**Task 5:**
-
-Current deployment `nginx-deploy` release has nginx:1.19-alpine image.New release should use nginx:1.21-alpine.Use rolling update process
-
-**Task 6:**
-
-A `lemon` deployment has been deployed in namespace `trouble`, but there are no pods associated with it. Figure out the root cause and fix the issue.
-
-**Task 7:**
-
-A `orange` deployment has been deployed in namespace `trouble`, but it doesn’t work properly. Figure out the root cause and fix the issue.
+    nslookup random-generator-0.random-generator.default.svc.cluster.local
+    nslookup random-generator-1.random-generator.default.svc.cluster.local
+    nslookup random-generator-3.random-generator.default.svc.cluster.local
 
   
   
 
-This is it with deployments. To remove auomatically privisioned resources run:
+This is it with statefulsets. To remove auomatically privisioned resources run:
 
-    $ ./delete_deployments
+    $ ./delete_sts
 
 And don't forget to clean up everything else
