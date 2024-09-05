@@ -90,6 +90,8 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: mongo
+  labels:
+    app: mongo
 spec:
   serviceName: "mongo"
   replicas: 1
@@ -109,10 +111,10 @@ spec:
         resources:
           requests:
             memory: "128Mi"
-            cpu: "200m"
+            cpu: "0.2"
           limits:
             memory: "256Mi"
-            cpu: "500m"
+            cpu: "0.5"
         env:
         - name: MONGO_INITDB_ROOT_USERNAME
           valueFrom:
