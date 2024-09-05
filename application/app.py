@@ -100,14 +100,15 @@ def db_message():
             app.logger.error(f'Failed to connecto to MongoDB: {e}')
 
             return jsonify({"result": str(e), "succeed": False})
+
 @app.route("/healthz")
 def healthz():
-    return "OK"
+    return jsonify({"status": "OK"}), 200
 
 @app.route("/healthx")
 def healthx():
     sleep(1)
-    return "OK"
+    return jsonify({"status": "OK"}), 200
 
 if __name__ == "__main__":
     app.run()
