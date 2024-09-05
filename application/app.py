@@ -14,7 +14,7 @@ app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
 time_start = datetime.now()
 
-bg_color = os.environ.get("BG_COLOR", "white")
+bg_color = os.environ.get("BG_COLOR", "teal")
 mongo_username = os.environ.get("MONGO_USERNAME", "root")
 mongo_password = os.environ.get("MONGO_PASSWORD", "example")
 mongo_host = os.environ.get("MONGO_HOST", "localhost") 
@@ -106,7 +106,7 @@ def healthz():
 
 @app.route("/healthx")
 def healthx():
-    sleep(1);
+    sleep(1)
     return "OK"
 
 if __name__ == "__main__":
