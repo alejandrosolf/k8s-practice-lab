@@ -19,6 +19,7 @@ kind: Secret
 metadata:
   creationTimestamp: null
   name: mongo
+type: Opaque
 ---
 apiVersion: apps/v1
 kind: Deployment
