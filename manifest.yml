@@ -116,17 +116,9 @@ spec:
           limits:
             memory: "256Mi"
             cpu: "0.5"
-        env:
-        - name: MONGO_INITDB_ROOT_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: mongo
-              key: MONGO_USERNAME
-        - name: MONGO_INITDB_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mongo
-              key: MONGO_PASSWORD
+        envFrom:
+        - secretRef:
+            name: mongo
         volumeMounts:
         - name: mongo-persistent-storage
           mountPath: /data/db
