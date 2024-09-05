@@ -13,8 +13,8 @@ metadata:
 ---
 apiVersion: v1
 data:
-  MONGO_USERNAME: cm9vdA==
-  MONGO_PASSWORD: ZXhhbXBsZQ==
+  MONGO_INITDB_ROOT_USERNAME: cm9vdA==
+  MONGO_INITDB_ROOT_PASSWORD: ZXhhbXBsZQ==
 kind: Secret
 metadata:
   creationTimestamp: null
