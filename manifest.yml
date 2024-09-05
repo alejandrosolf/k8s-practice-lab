@@ -20,15 +20,6 @@ metadata:
   creationTimestamp: null
   name: mongo
 ---
-apiVersion: v1
-data:
-  .dockerconfigjson: eyJhdXRocyI6eyJodHRwczovL2luZGV4LmRvY2tlci5pby92MS8iOnsidXNlcm5hbWUiOiJhbGVqYW5kcm9zb2xmIiwicGFzc3dvcmQiOiJDYW1hcm85OC4iLCJlbWFpbCI6InNvbGlzX2FsZXg5OEBob3RtYWlsLmNvbSIsImF1dGgiOiJZV3hsYW1GdVpISnZjMjlzWmpwRFlXMWhjbTg1T0M0PSJ9fX0=
-kind: Secret
-metadata:
-  creationTimestamp: null
-  name: regcreds
-type: kubernetes.io/dockerconfigjson
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -115,6 +106,13 @@ spec:
         image: mongo
         ports:
         - containerPort: 27017
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "200m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
         env:
         - name: MONGO_INITDB_ROOT_USERNAME
           valueFrom:
